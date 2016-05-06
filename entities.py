@@ -50,7 +50,7 @@ class Mob(object):
         self.name = name
         self.loc = loc
         self.inventory = inventory
-        self.health, self.ducats = inventory, ducats
+        self.health, self.ducats = health, ducats
         self.index = len(Mob.index)
         Mob.index.append(self)
         if name in Mob.name_index:
@@ -67,7 +67,7 @@ class Mob(object):
             self.inventory, self.ducats, self.health)
 
     def __str__(self):
-        return "<Room: %s>" % self.name
+        return "<Mob: %s>" % self.name
         
         
         
