@@ -17,6 +17,8 @@ class Room(object):
         Room.name_index[name] = self
         Room.loc_index[(x, y, z)] = self
         Mob.loc_index[self] = []
+        self.north = get_direction_loc(self.coordinates, 'north')
+        
 
     # return a dictionary based on a query
     # can take name (str), loc (tuple, or index (int)
@@ -60,6 +62,18 @@ class Mob(object):
         Mob.loc_index[loc].append(self)
         Mob.index.append(self)
 
+    def lookup(query):
+        if isinstance(query, str):
+            out = Mob.name_index[query]
+            return out
+        if isinstance(query, int):
+            out = Mob.index[query]
+            return out
+        if isinstance(query, tuple):
+            out = Mob.loc_index[query]
+            return out
+        
+        
     def __repr__(self):
         return "<%s: Mob object located at %s,\
  inventory=%s, ducats=%s, health=%s>" % (
@@ -99,18 +113,3 @@ def get_direction_loc(loc, direction):
         modified_loc = loc[0], loc[1], loc[2] - 1
         return modified_loc
 
-        # Room('house', 10, 12)
-        # Room('barn', 11, 12)
-        # Room('lake', 40, 12, contents=['hat'])
-
-        # for room in Room.index:
-        #     print(room['index'])
-
-        # #print(Room.lookup('lake'))
-
-# Room('house', 10, 12, contents=['football'])
-# print(Mob.loc_index)
-# patrick = Mob('Patrick', Room.lookup('house'))
-# print(Mob.loc_index)
-# print(patrick.loc.contents)        
-# print(patrick.index)

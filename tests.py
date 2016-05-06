@@ -7,6 +7,7 @@ class CrawlerTestCase(unittest.TestCase):
     def setUpClass(self):
         entities.Room('barn', 5, 5)
         entities.Room('room', 40, 12, contents=['hat'])
+        entities.Mob('Player', entities.Room.lookup('barn'))        
 
 
 class RunCrawlerTests(CrawlerTestCase):
@@ -43,8 +44,9 @@ class RunCrawlerTests(CrawlerTestCase):
         self.assertEqual(room.coordinates, (40, 12, 0))
 
     def test_player_instantiation(self):
-        player = entities.Mob('Player', entities.Room.lookup('barn'))
-
+        player = entities.Mob.lookup('Player')[0]
+        self.assertEqual(player.name, 'Player')
+        self.assertEqual(player.health, 10)
 
 
 if __name__ == '__main__':
