@@ -25,9 +25,9 @@ class crawler_tests(unittest.TestCase):
 
     def test_room_instatiation(self):
         entities.Room('house', 10, 15)
-        self.assertEqual(entities.Room.list[0]['name'], 'house')
-        self.assertEqual(entities.Room.list[0]['x'], 10)
-        self.assertEqual(entities.Room.list[0]['y'], 15)
+        self.assertEqual(entities.Room.index[0]['name'], 'house')
+        self.assertEqual(entities.Room.index[0]['x'], 10)
+        self.assertEqual(entities.Room.index[0]['y'], 15)
 
 
 if __name__ == '__main__':
