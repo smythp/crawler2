@@ -29,6 +29,12 @@ class crawler_tests(unittest.TestCase):
         self.assertEqual(entities.Room.index[0]['x'], 10)
         self.assertEqual(entities.Room.index[0]['y'], 15)
 
+    def test_room_lookup(self):
+        entities.Room('room', 40, 12, contents=['hat'])
+        room = entities .Room.lookup('room')
+        self.assertEqual(room['name'], 'room')
+        self.assertEqual(room['contents'], ['hat'])
+        self.assertEqual(room['loc'], (40, 12, 0))
 
 if __name__ == '__main__':
     unittest.main()

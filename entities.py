@@ -58,8 +58,13 @@ def get_direction_loc(loc, direction):
         return modified_loc
 
 
+
+
 # Room('house', 10, 12)
 # Room('barn', 11, 12)
 # Room('lake', 40, 12, contents=['hat'])
 
-# print(Room.lookup('lake'))
+# for room in Room.index:
+#     print(room['index'])
+
+# #print(Room.lookup('lake'))
