@@ -174,9 +174,9 @@ def debug_indexes():
 
 
 # if __name__ == '__main__':
-#     house = Room('house', 10, 10)
-#     barn = Room('barn', 10, 11)
-#     player = Mob('Player', Room.lookup('house'))
-#     debug_indexes()
-#     player.move('north')
-#     debug_indexes()
+house = Room('house', 10, 10)
+barn = Room('barn', 10, 11)
+player = Mob('Player', Room.lookup('house'))
+
+
+
