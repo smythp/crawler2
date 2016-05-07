@@ -2,15 +2,51 @@ import unittest
 import entities
 
 
-class CrawlerTestCase(unittest.TestCase):
+class InstantiationTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
-        entities.Room('barn', 5, 5)
+#        print('setup for instant')
         entities.Room('room', 40, 12, contents=['hat'])
-        entities.Mob('Player', entities.Room.lookup('barn'))        
+        entities.Room('barn', 5, 5)
+        entities.Room('pasture', 6, 5)
+        entities.Mob('P', entities.Room.lookup('barn'))
+
+    @classmethod        
+    def tearDownClass(self):
+#        print('instant teardown')
+        for room in entities.Room.index:
+            del room
+        entities.Room.index = []
+        entities.Room.name_index = {}
+        entities.Room.loc_index = {}
+        entities.Mob.index = []
+        entities.Mob.name_index = {}
+        entities.Mob.loc_index = {}
 
 
-class RunCrawlerTests(CrawlerTestCase):
+
+class MovementTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+#        print('setup for move')
+        entities.Room('lake', 10, 10, contents=['hat'])
+        entities.Room('boathouse', 11, 10)
+        entities.Mob('Player', entities.Room.lookup('lake'))
+
+    @classmethod        
+    def tearDownClass(self):
+#        print('movement teardown')
+        for room in entities.Room.index:
+            del room
+        entities.Room.index = []
+        entities.Room.name_index = {}
+        entities.Room.loc_index = {}
+        entities.Mob.index = []
+        entities.Mob.name_index = {}
+        entities.Mob.loc_index = {}
+       
+
+class InstantiationTests(InstantiationTestCase):
     def test_get_direction_function(self):
         self.assertEqual(
             entities.get_direction_loc(
@@ -44,10 +80,18 @@ class RunCrawlerTests(CrawlerTestCase):
         self.assertEqual(room.coordinates, (40, 12, 0))
 
     def test_player_instantiation(self):
-        player = entities.Mob.lookup('Player')[0]
-        self.assertEqual(player.name, 'Player')
-        self.assertEqual(player.health, 10)
+        p = entities.Mob.lookup('P')[0]
+        self.assertEqual(p.name, 'P')
+        self.assertEqual(p.health, 10)
+        room_inhabitants = entities.Room.lookup('barn').inhabitants
+        self.assertEqual('P', room_inhabitants[0].name)
 
+
+class MovementTests(MovementTestCase):
+    def test_player_movement(self):
+        player = entities.Mob.lookup('Player')[0]
+        player.move('east')
+        self.assertEqual(player.loc.name, 'boathouse')
 
 if __name__ == '__main__':
     unittest.main()

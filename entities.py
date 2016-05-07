@@ -61,6 +61,7 @@ class Mob(object):
             Mob.name_index[name] = [self]
         Mob.loc_index[loc].append(self)
         Mob.index.append(self)
+        self.loc.inhabitants.append(self)
 
     def lookup(query):
         if isinstance(query, str):
@@ -73,7 +74,6 @@ class Mob(object):
             out = Mob.loc_index[query]
             return out
         
-        
     def __repr__(self):
         return "<%s: Mob object located at %s,\
  inventory=%s, ducats=%s, health=%s>" % (
@@ -82,13 +82,7 @@ class Mob(object):
 
     def __str__(self):
         return "<Mob: %s>" % self.name
-        
-        
-        
-        
 
-
-    
         
 # takes location tuple and string for direction, i.e. "north"
 # returns new location
