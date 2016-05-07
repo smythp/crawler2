@@ -5,9 +5,10 @@ class Room(object):
 
     # instantiate object and add to class-level indexes
     def __init__(self, name, x, y, z=0, ):
-        if name in Room.name_index \
-           or (x, y, z) in Room.loc_index:
-            raise KeyError('Key already in use')
+        if name in Room.name_index:
+            raise KeyError('That name is already in use for another room')
+        if (x, y, z) in Room.loc_index:
+            raise KeyError('That location is already in use for another room')
         self.contents = []
         self.inhabitants = []
         self.name = name
@@ -150,7 +151,32 @@ def get_direction_loc(loc, direction):
         modified_loc = loc[0], loc[1], loc[2] - 1
         return modified_loc
 
-if __name__ == '__main__':
-    house = Room('house', 10, 10)
-    barn = Room('barn', 10, 11)
-    player = Mob('Player', Room.lookup('house'))
+
+def debug_indexes():
+    print('''Room location index:
+    ''')
+    print(Room.loc_index)
+    print('''Room index:
+    ''')
+    print(Room.index)
+    print('''Room name index:
+    ''')
+    print(Room.name_index)
+    print('''Mob location index
+    ''')
+    print(Mob.loc_index)
+    print('''Mob index:
+    ''')
+    print(Mob.index)
+    print('''Mob name index:
+    ''')
+    print(Mob.name_index)
+
+
+# if __name__ == '__main__':
+#     house = Room('house', 10, 10)
+#     barn = Room('barn', 10, 11)
+#     player = Mob('Player', Room.lookup('house'))
+#     debug_indexes()
+#     player.move('north')
+#     debug_indexes()
