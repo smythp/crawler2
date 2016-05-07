@@ -13,15 +13,17 @@ class Room(object):
         self.contents, self.inhabitants = contents, inhabitants
         self.index = len(Room.index)
         self.coordinates = x, y, z
+        self.loc = x, y, z
         Room.index.append(self)
         Room.name_index[name] = self
         Room.loc_index[(x, y, z)] = self
         Mob.loc_index[self] = []
-        self.north = get_direction_loc(self.coordinates, 'north')
-        
 
-    # return a dictionary based on a query
-    # can take name (str), loc (tuple, or index (int)
+        # self.north = get_room_from_direction(self.loc, 'north')
+        # self.east = get_room_from_direction(self.loc, 'east')
+
+        # return a dictionary based on a query
+        # can take name (str), loc (tuple, or index (int)
     def lookup(query):
         if isinstance(query, str):
             out = Room.name_index[query]
@@ -35,14 +37,14 @@ class Room(object):
 
     def __repr__(self):
         return "<%s: Room object located at x=%s, y=%s, z=%s,\
- inhabitants=%s, contents=%s>" % (
-            self.name, self.x, self.y, self.z,
-            self.inhabitants, self.contents)
+ inhabitants=%s, contents=%s>" % (self.name, self.x, self.y, self.z,
+                                  self.inhabitants, self.contents)
 
     def __str__(self):
         return "<Room: %s>" % self.name
 
 
+# class for creatures in the world
 class Mob(object):
     index = []
     name_index = {}
@@ -73,19 +75,57 @@ class Mob(object):
         if isinstance(query, tuple):
             out = Mob.loc_index[query]
             return out
-        
+
+    # return the room in a given direction
+    def get_room_in_direction(self, direction):
+        if direction not in Constants.valid_directions:
+            raise LookupError('Not a valid direction')
+        new_loc = get_direction_loc(self.loc.loc, direction)
+        if new_loc not in Room.loc_index:
+            return False
+        else:
+            return Room.loc_index[new_loc]
+
+    def move(self, direction):
+        intended_location = self.get_room_in_direction(direction)
+        if intended_location:
+            self.loc = intended_location
+        return intended_location
+
     def __repr__(self):
         return "<%s: Mob object located at %s,\
- inventory=%s, ducats=%s, health=%s>" % (
-            self.name, self.loc,
-            self.inventory, self.ducats, self.health)
+ inventory=%s, ducats=%s, health=%s>" % (self.name, self.loc, self.inventory,
+                                         self.ducats, self.health)
 
     def __str__(self):
         return "<Mob: %s>" % self.name
 
-        
-# takes location tuple and string for direction, i.e. "north"
-# returns new location
+
+class Constants(object):
+    valid_directions = ('n',
+                        's',
+                        'e',
+                        'w',
+                        'u',
+                        'd',
+                        'north',
+                        'south',
+                        'east',
+                        'west',
+                        'up',
+                        'down',
+                        'ne',
+                        'se',
+                        'nw',
+                        'sw',
+                        'northeast',
+                        'southeast',
+                        'northwest',
+                        'southwest', )
+
+
+    # takes location tuple and string for direction, i.e. "north"
+    # returns new location
 def get_direction_loc(loc, direction):
     loc = list(loc)
     if direction == 'n' or direction == 'north':
@@ -107,3 +147,12 @@ def get_direction_loc(loc, direction):
         modified_loc = loc[0], loc[1], loc[2] - 1
         return modified_loc
 
+if __name__ == '__main__':
+    house = Room('house', 10, 10)
+    barn = Room('barn', 10, 11)
+    player = Mob('Player', Room.lookup('house'))
+    print('player is at', player.loc)
+    player.move('north')
+    print('player is at', player.loc)
+    player.move('east')
+    print('player is at', player.loc)
