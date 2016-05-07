@@ -6,7 +6,7 @@ class InstantiationTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 #        print('setup for instant')
-        entities.Room('room', 40, 12, contents=['hat'])
+        entities.Room('room', 40, 12)
         entities.Room('barn', 5, 5)
         entities.Room('pasture', 6, 5)
         entities.Mob('P', entities.Room.lookup('barn'))
@@ -29,7 +29,7 @@ class MovementTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 #        print('setup for move')
-        entities.Room('lake', 10, 10, contents=['hat'])
+        entities.Room('lake', 10, 10)
         entities.Room('boathouse', 11, 10)
         entities.Mob('Player', entities.Room.lookup('lake'))
 
@@ -76,7 +76,6 @@ class InstantiationTests(InstantiationTestCase):
     def test_room_lookup(self):
         room = entities.Room.lookup('room')
         self.assertEqual(room.name, 'room')
-        self.assertEqual(room.contents, ['hat'])
         self.assertEqual(room.coordinates, (40, 12, 0))
 
     def test_player_instantiation(self):
@@ -92,6 +91,12 @@ class MovementTests(MovementTestCase):
         player = entities.Mob.lookup('Player')[0]
         player.move('east')
         self.assertEqual(player.loc.name, 'boathouse')
+
+    def test_update_indexes_on_move(self):
+        player = entities.Mob.lookup('Player')[0]
+        self.assertEqual(player, player.loc.inhabitants[0])
+        self.assertEqual(entities.Room.lookup('lake').inhabitants, [])
+
 
 if __name__ == '__main__':
     unittest.main()

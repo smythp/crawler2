@@ -3,14 +3,15 @@ class Room(object):
     name_index = {}
     loc_index = {}
 
-    # instatiate object and add to class-level indexes
-    def __init__(self, name, x, y, z=0, inhabitants=[], contents=[]):
+    # instantiate object and add to class-level indexes
+    def __init__(self, name, x, y, z=0, ):
         if name in Room.name_index \
            or (x, y, z) in Room.loc_index:
             raise KeyError('Key already in use')
+        self.contents = []
+        self.inhabitants = []
         self.name = name
         self.x, self.y, self.z = x, y, z
-        self.contents, self.inhabitants = contents, inhabitants
         self.index = len(Room.index)
         self.coordinates = x, y, z
         self.loc = x, y, z
@@ -89,7 +90,9 @@ class Mob(object):
     def move(self, direction):
         intended_location = self.get_room_in_direction(direction)
         if intended_location:
+            self.loc.inhabitants.remove(self)
             self.loc = intended_location
+            self.loc.inhabitants.append(self)
         return intended_location
 
     def __repr__(self):
@@ -124,8 +127,8 @@ class Constants(object):
                         'southwest', )
 
 
-    # takes location tuple and string for direction, i.e. "north"
-    # returns new location
+# takes location tuple and string for direction, i.e. "north"
+# returns new location
 def get_direction_loc(loc, direction):
     loc = list(loc)
     if direction == 'n' or direction == 'north':
@@ -151,8 +154,3 @@ if __name__ == '__main__':
     house = Room('house', 10, 10)
     barn = Room('barn', 10, 11)
     player = Mob('Player', Room.lookup('house'))
-    print('player is at', player.loc)
-    player.move('north')
-    print('player is at', player.loc)
-    player.move('east')
-    print('player is at', player.loc)
